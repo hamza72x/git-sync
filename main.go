@@ -129,12 +129,11 @@ func execute(c theContent) {
 
 			out, err := cmd.Output()
 
-			if err != nil {
-				hel.Pl("Error running command:", command.Command, "args:", command.Args)
-			}
-
-			hel.Pl("Ran command:", command.Command, "args:", command.Args)
-			hel.Pl("output:", string(out))
+			hel.Pl(
+				"`Command`", command.Command+" "+hel.ArrToStr(command.Args, " "),
+				"\n`Err`", err,
+				"\n`Output`", strings.TrimSpace(string(out)),
+			)
 
 		}
 
