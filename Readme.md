@@ -7,25 +7,26 @@ You can run other commands too!
 3. Keep running the command in background
 
 Example `.config.git-sync.json` file
-```
+
+```json
 [
     {
         "dir_path": "/Users/nix/shell",
         "commands": [
             {
                 "command": "git",
-                "command_args": "add ."
+                "args": ["add", "."]
             },
             {
                 "command": "git",
-                "command_args": "commit -m \"git-sync $(date \"+%Y-%m-%d_%H-%M-%S\")\""
+                "args": ["commit", "-m", "[auto] git-sync $CURRENT_TIME$"]
             },
             {
                 "command": "git",
-                "command_args": "push origin master"
+                "args": ["push", "origin", "master"]
             }
         ],
-        "delay": 10,
+        "delay": 5,
         "ignore_files": [
             ".DS_Store",
             ".env"
@@ -36,3 +37,4 @@ Example `.config.git-sync.json` file
 
 - `delay`, in seconds
 - `ignore_files`, files at which (on changes) command won't execute
+- special args `$CURRENT_TIME$` = `2006-01-02 15:04:05.999999999 -0700 MST`, `$RANDOM$` = `random 10 characters`,

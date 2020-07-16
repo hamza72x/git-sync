@@ -13,6 +13,6 @@ type theContent struct {
 }
 
 type theCommand struct {
-	Command     string `json:"command"`
-	CommandArgs string `json:"command_args"`
+	Command string   `json:"command"`
+	Args    []string `json:"args"`
 }

@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"math/rand"
 	"os/exec"
 	"os/user"
 	"path/filepath"
@@ -13,6 +14,8 @@ import (
 )
 
 const configFileName = ".config.git-sync.json"
+
+var letterRunes = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
 
 var homeDir string
 var scheduledPaths []string
@@ -108,14 +111,18 @@ func execute(c theContent) {
 	time.AfterFunc(c.Delay*time.Second, func() {
 
 		for _, command := range c.Commands {
-			args := strings.Split(command.CommandArgs, " ")
+
+			for i := range command.Args {
+				command.Args[i] = strings.ReplaceAll(command.Args[i], "$CURRENT_TIME$", time.Now().String())
+				command.Args[i] = strings.ReplaceAll(command.Args[i], "$RANDOM$", getRandomStr(10))
+			}
 
 			var cmd *exec.Cmd
 
-			if len(args) == 0 {
+			if len(command.Args) == 0 {
 				cmd = exec.Command(command.Command)
 			} else {
-				cmd = exec.Command(command.Command, args...)
+				cmd = exec.Command(command.Command, command.Args...)
 			}
 
 			cmd.Dir = c.DirPath
@@ -123,10 +130,10 @@ func execute(c theContent) {
 			out, err := cmd.Output()
 
 			if err != nil {
-				hel.Pl("Error running command:", command.Command, "args:", command.CommandArgs)
+				hel.Pl("Error running command:", command.Command, "args:", command.Args)
 			}
 
-			hel.Pl("Ran command:", command.Command, "args:", command.CommandArgs)
+			hel.Pl("Ran command:", command.Command, "args:", command.Args)
 			hel.Pl("output:", string(out))
 
 		}
@@ -144,4 +151,12 @@ func removeFromArray(s []string, r string) []string {
 		}
 	}
 	return s
+}
+
+func getRandomStr(n int) string {
+	b := make([]rune, n)
+	for i := range b {
+		b[i] = letterRunes[rand.Intn(len(letterRunes))]
+	}
+	return string(b)
 }

@@ -4,18 +4,18 @@
         "commands": [
             {
                 "command": "git",
-                "command_args": "add ."
+                "args": ["add", "."]
             },
             {
                 "command": "git",
-                "command_args": "commit -m \"git-sync $(date \"+%Y-%m-%d_%H-%M-%S\")\""
+                "args": ["commit", "-m", "[auto] git-sync $CURRENT_TIME$"]
             },
             {
                 "command": "git",
-                "command_args": "push origin master"
+                "args": ["push", "origin", "master"]
             }
         ],
-        "delay": 10,
+        "delay": 5,
         "ignore_files": [
             ".DS_Store",
             ".env"
