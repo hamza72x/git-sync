@@ -12,10 +12,19 @@ Example `.config.git-sync.json` file
     {
         "dir_path": "/Users/nix/shell",
         "commands": [
-			{"command": "git", "command_args": "add ."},
-            {"command": "git", "command_args": "commit -m \"git-sync $(date \"+%Y-%m-%d_%H-%M-%S\")\""},
-            {"command": "git", "command_args": "push origin master"}
-		],
+            {
+                "command": "git",
+                "command_args": "add ."
+            },
+            {
+                "command": "git",
+                "command_args": "commit -m \"git-sync $(date \"+%Y-%m-%d_%H-%M-%S\")\""
+            },
+            {
+                "command": "git",
+                "command_args": "push origin master"
+            }
+        ],
         "delay": 10,
         "ignore_files": [
             ".DS_Store",

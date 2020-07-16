@@ -1,8 +1,20 @@
 [
     {
         "dir_path": "/Users/nix/shell",
-        "command": "git",
-        "command_args": "push origin master",
+        "commands": [
+            {
+                "command": "git",
+                "command_args": "add ."
+            },
+            {
+                "command": "git",
+                "command_args": "commit -m \"git-sync $(date \"+%Y-%m-%d_%H-%M-%S\")\""
+            },
+            {
+                "command": "git",
+                "command_args": "push origin master"
+            }
+        ],
         "delay": 10,
         "ignore_files": [
             ".DS_Store",
