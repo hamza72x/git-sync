@@ -9,6 +9,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/0xAX/notificator"
 	"github.com/fsnotify/fsnotify"
 	hel "github.com/thejini3/go-helper"
 )
@@ -20,6 +21,11 @@ var letterRunes = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
 var homeDir string
 var scheduledPaths []string
 var contents []theContent
+
+var notify = notificator.New(notificator.Options{
+	DefaultIcon: "default.png",
+	AppName:     "git-sync",
+})
 
 func main() {
 	hel.Pl("Starting git-sync")
@@ -109,7 +115,7 @@ func execute(c theContent) {
 	}
 
 	time.AfterFunc(c.Delay*time.Second, func() {
-
+		var outStr = ""
 		for _, command := range c.Commands {
 
 			for i := range command.Args {
@@ -135,8 +141,11 @@ func execute(c theContent) {
 				"\n`Output`", strings.TrimSpace(string(out)),
 			)
 
+			outStr += strings.TrimSpace(string(out)) + "\n"
+
 		}
 
+		no(c.DirPath, outStr)
 		scheduledPaths = removeFromArray(scheduledPaths, c.DirPath)
 
 	})
@@ -158,4 +167,8 @@ func getRandomStr(n int) string {
 		b[i] = letterRunes[rand.Intn(len(letterRunes))]
 	}
 	return string(b)
+}
+
+func no(title string, desc string) {
+	notify.Push(title, desc, "default.png", notificator.UR_NORMAL)
 }
