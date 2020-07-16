@@ -1,0 +1,12 @@
+[
+    {
+        "dir_path": "/Users/nix/shell",
+        "command": "git",
+        "command_args": "push origin master",
+        "delay": 10,
+        "ignore_files": [
+            ".DS_Store",
+            ".env"
+        ]
+    }
+]

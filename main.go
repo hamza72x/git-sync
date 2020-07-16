@@ -15,6 +15,7 @@ import (
 const configFileName = ".config.git-sync.json"
 
 var homeDir string
+var scheduledPaths []string
 var contents []theContent
 
 func main() {
@@ -53,20 +54,12 @@ func watch() {
 				dir := filepath.Dir(event.Name)
 				base := filepath.Base(dir)
 
-				if event.Op&fsnotify.Write == fsnotify.Write {
-
-					if content, found := getContentFromDirPath(dir); found {
-						if hel.StrContains(content.IgnoreFiles, base) {
-							return
-						}
-						hel.Pl("dir", dir, "base", base, "event", event.Op.String())
-						execute(content)
+				if content, found := getContentFromDirPath(dir); found {
+					if hel.StrContains(content.IgnoreFiles, base) {
+						return
 					}
+					execute(content)
 				}
-
-				// if event.Op&fsnotify.Write == fsnotify.Write {
-				// 	hel.Pl("modified file:", event.Name)
-				// }
 
 			case err, ok := <-watcher.Errors:
 
@@ -104,29 +97,51 @@ func getContentFromDirPath(path string) (theContent, bool) {
 }
 
 func execute(c theContent) {
+
+	if !hel.StrContains(scheduledPaths, c.DirPath) {
+		hel.Pl("scheduling", c)
+		scheduledPaths = append(scheduledPaths, c.DirPath)
+	} else {
+		return
+	}
+
 	time.AfterFunc(c.Delay*time.Second, func() {
 
-		args := strings.Split(c.CommandArgs, " ")
+		for _, command := range c.Commands {
+			args := strings.Split(command.CommandArgs, " ")
 
-		var cmd *exec.Cmd
+			var cmd *exec.Cmd
 
-		if len(args) == 0 {
-			cmd = exec.Command(c.Command)
-		} else {
-			cmd = exec.Command(c.Command, args...)
+			if len(args) == 0 {
+				cmd = exec.Command(command.Command)
+			} else {
+				cmd = exec.Command(command.Command, args...)
+			}
+
+			cmd.Dir = c.DirPath
+
+			out, err := cmd.Output()
+
+			if err != nil {
+				hel.Pl("Error running command:", command.Command, "args:", command.CommandArgs)
+			}
+
+			hel.Pl("Ran command:", command.Command, "args:", command.CommandArgs)
+			hel.Pl("output:", string(out))
+
 		}
 
-		cmd.Dir = c.DirPath
-
-		out, err := cmd.Output()
-
-		if err != nil {
-			hel.Pl("Error running command:", c.Command, "args:", c.CommandArgs)
-		}
-
-		hel.Pl("Ran command:", c.Command, "args:", c.CommandArgs)
-		hel.Pl("output:", string(out))
+		scheduledPaths = removeFromArray(scheduledPaths, c.DirPath)
 
 	})
 
+}
+
+func removeFromArray(s []string, r string) []string {
+	for i, v := range s {
+		if v == r {
+			return append(s[:i], s[i+1:]...)
+		}
+	}
+	return s
 }
