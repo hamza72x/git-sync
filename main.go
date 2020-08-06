@@ -52,9 +52,6 @@ func flags() {
 		flag.PrintDefaults()
 		os.Exit(1)
 	}
-
-	hel.Pl(hel.GetFileStr(cfgFilepath), cfgFilepath)
-	panic("boom")
 }
 
 func watch() {
