@@ -6,8 +6,12 @@
 		<true/>
 		<key>Label</key>
 		<string>git.sync.runner</string>
-		<key>Program</key>
-		<string>~/go-xc/bin/git-sync</string>
+		<key>ProgramArguments</key>
+		<array>
+			<string>~/go-xc/bin/git-sync</string>
+			<string>-f</string>
+			<string>~/.config.git-sync.json</string>
+		</array>
 		<key>RunAtLoad</key>
 		<true/>
 	</dict>

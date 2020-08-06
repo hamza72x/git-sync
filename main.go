@@ -2,9 +2,10 @@ package main
 
 import (
 	"encoding/json"
+	"flag"
 	"math/rand"
+	"os"
 	"os/exec"
-	"os/user"
 	"path/filepath"
 	"strings"
 	"time"
@@ -14,11 +15,11 @@ import (
 	hel "github.com/thejini3/go-helper"
 )
 
-const configFileName = ".config.git-sync.json"
+// (required) will set in flags
+var cfgFilepath string
 
 var letterRunes = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
 
-var homeDir string
 var scheduledPaths []string
 var contents []theContent
 
@@ -28,18 +29,32 @@ var notify = notificator.New(notificator.Options{
 })
 
 func main() {
+	// flags
+	flags()
+
 	hel.Pl("Starting git-sync")
-	usr, err := user.Current()
+
+	err := json.Unmarshal(hel.GetFileBytes(cfgFilepath), &contents)
+
 	if err != nil {
-		hel.Pl(err)
+		panic("Error filedata - " + cfgFilepath)
 	}
-	homeDir = usr.HomeDir
-	hel.Pl("homeDir: " + homeDir)
-	err = json.Unmarshal(hel.GetFileBytes(homeDir+"/"+configFileName), &contents)
-	if err != nil {
-		hel.Pl("error in json unmarshal", err)
-	}
+
 	watch()
+}
+
+func flags() {
+	flag.StringVar(&cfgFilepath, "f", "", "config file path, ex: -f ~/.config.git-sync.json")
+
+	flag.Parse()
+
+	if cfgFilepath == "" {
+		flag.PrintDefaults()
+		os.Exit(1)
+	}
+
+	hel.Pl(hel.GetFileStr(cfgFilepath), cfgFilepath)
+	panic("boom")
 }
 
 func watch() {
