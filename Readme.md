@@ -39,3 +39,13 @@ Example `.config.git-sync.json` file
 - `delay`, in seconds
 - `ignore_files`, files at which (on changes) command won't execute
 - special args `$CURRENT_TIME$` = `2006-01-02 15:04:05.999999999 -0700 MST`, `$RANDOM$` = `random 10 characters`,
+
+# Launch Agents
+
+For mac: put `git.sync.runner.plist` in `$HOME/Library/LaunchAgents` directory
+
+For linux: put `git-sync.service` in `/lib/systemd/system` directory
+	- sudo systemctl start git-sync
+	- sudo systemctl enable git-sync (for auto start at boot)
+
+

@@ -1,0 +1,14 @@
+[Unit]
+Description=git-sync
+ConditionPathExists=/home/nix/go-xc/bin/git-sync
+After=network.target
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=5s
+WorkingDirectory=/home/nix/go-xc/src/github.com/thejini3/git-sync
+ExecStart=/home/nix/go-xc/gin/git-sync
+
+[Install]
+WantedBy=multi-user.target
