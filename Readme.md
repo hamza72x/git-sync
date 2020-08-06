@@ -48,4 +48,6 @@ For linux: put `git-sync.service` in `/lib/systemd/system` directory
 	- sudo systemctl start git-sync
 	- sudo systemctl enable git-sync (for auto start at boot)
 
+:: Make sure you made your path/directory changes to your launch agents ::
+
 
