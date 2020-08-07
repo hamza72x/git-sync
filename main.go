@@ -34,10 +34,14 @@ func main() {
 
 	hel.Pl("Starting git-sync")
 
-	err := json.Unmarshal(hel.GetFileBytes(cfgFilepath), &contents)
+	bytes, err := hel.FileBytes(cfgFilepath)
+	if err != nil {
+		panic("Error getting filyBytes - " + err.Error())
+	}
+	err = json.Unmarshal(bytes, &contents)
 
 	if err != nil {
-		panic("Error filedata - " + cfgFilepath)
+		panic("Error Unmarshal - " + cfgFilepath + " - " + err.Error())
 	}
 
 	watch()
@@ -148,7 +152,7 @@ func execute(c theContent) {
 			out, err := cmd.Output()
 
 			hel.Pl(
-				"`Command`", command.Command+" "+hel.ArrToStr(command.Args, " "),
+				"`Command`", command.Command+" "+hel.StrArrToStr(command.Args, " "),
 				"\n`Err`", err,
 				"\n`Output`", strings.TrimSpace(string(out)),
 			)
