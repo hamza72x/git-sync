@@ -2,17 +2,17 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 	<dict>
-		<key>EnableGlobbing</key>
-		<true/>
 		<key>Label</key>
-		<string>git.sync.runner</string>
+			<string>git.sync.runner</string>
+		<key>Program</key>
+			<string>/Users/nix/go-xc/bin/git-sync</string>
 		<key>ProgramArguments</key>
-		<array>
-			<string>~/go-xc/bin/git-sync</string>
-			<string>-f</string>
-			<string>~/.config.git-sync.json</string>
-		</array>
+			<array>
+				<string>/Users/nix/go-xc/bin/git-sync</string>
+				<string>-f</string>
+				<string>/Users/nix/.config.git-sync.json</string>
+			</array>
 		<key>RunAtLoad</key>
-		<true/>
+			<true/>
 	</dict>
 </plist>

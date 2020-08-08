@@ -42,10 +42,12 @@ Example `.config.git-sync.json` file
 # Launch Agents
 
 For mac: put `git.sync.runner.plist` in `$HOME/Library/LaunchAgents` directory
+    - `cp $GOPATH/src/github.com/thejini3/git-sync/git.sync.runner.plist ~/Library/LaunchAgents/`
+    - `sudo chown root:wheel ~/Library/LaunchAgents/git.sync.runner.plist`
 
 For linux: put `git-sync.service` in `/lib/systemd/system` directory
-	- sudo systemctl start git-sync
-	- sudo systemctl enable git-sync (for auto start at boot)
+	- `sudo systemctl start git-sync`
+	- `sudo systemctl enable git-sync` (for auto start at boot)
 
 :: Make sure you made your path/directory changes to your launch agents ::
 
